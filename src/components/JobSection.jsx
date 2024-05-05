@@ -1,42 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 import Card from "./Card";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchJobs, fetchMoreJobs } from "../redux/slice/jobsSlice";
 
 const JobSection = () => {
-  const [job, setJobs] = useState([]);
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state);
+  const jobs = state.jobs.data.jdList;
+  let limit = 10;
 
   useEffect(() => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const body = JSON.stringify({
-      limit: 10,
-      offset: 0,
-    });
+    dispatch(fetchJobs());
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [dispatch]);
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body,
-    };
-
-    const data = async () => {
-      try {
-        const res = await fetch(
-          "https://api.weekday.technology/adhoc/getSampleJdJSONn",
-          requestOptions
-        );
-        const json = await res.json();
-        setJobs(json.jdList);
-      } catch (error) {
-        console.log(error);
-        setJobs([error]);
-      }
-    };
-
-    data();
-  }, []);
+  const handleScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      dispatch(fetchMoreJobs(limit));
+      limit = limit + 10;
+      console.log(jobs);
+    }
+  };
 
   return (
     <>
@@ -75,7 +63,7 @@ const JobSection = () => {
                     flexFlow: "wrap",
                   }}
                 >
-                  <Card job={job} />
+                  <Card job={jobs} />
                 </Grid>
               </Grid>
             </Grid>
