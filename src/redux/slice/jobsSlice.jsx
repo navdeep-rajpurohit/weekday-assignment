@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API_URL from "../../utils/api";
 
+// Api call
 export const fetchJobs = createAsyncThunk("fetchJobs", async () => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -21,7 +22,7 @@ export const fetchJobs = createAsyncThunk("fetchJobs", async () => {
 });
 
 // For infinite scroll
-export const fetchMoreJobs = createAsyncThunk("fetchJobs", async (page) => {
+export const fetchMoreJobs = createAsyncThunk("fetchMoreJobs", async (page) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -41,14 +42,32 @@ export const fetchMoreJobs = createAsyncThunk("fetchJobs", async (page) => {
   return res?.json();
 });
 
-export const moreJobsSlice = createSlice({
+// For filter
+export const filteredData = createAsyncThunk("filteredData", async (data) => {
+  return { jdList: data };
+});
+
+export const jobsSlice = createSlice({
   name: "jobs",
   initialState: {
     isLoading: false,
     data: [],
     isError: false,
+    filtered: [],
   },
+
   extraReducers: (builder) => {
+    builder.addCase(fetchJobs.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchJobs.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+      state.count = state.data.jdList.length;
+    });
+    builder.addCase(fetchJobs.rejected, (state, action) => {
+      state.isError = true;
+    });
     builder.addCase(fetchMoreJobs.pending, (state, action) => {
       state.isLoading = true;
     });
@@ -60,26 +79,14 @@ export const moreJobsSlice = createSlice({
     builder.addCase(fetchMoreJobs.rejected, (state, action) => {
       state.isError = true;
     });
-  },
-});
-
-export const jobsSlice = createSlice({
-  name: "jobs",
-  initialState: {
-    isLoading: false,
-    data: [],
-    isError: false,
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchJobs.pending, (state, action) => {
+    builder.addCase(filteredData.pending, (state, action) => {
       state.isLoading = true;
     });
-    builder.addCase(fetchJobs.fulfilled, (state, action) => {
+    builder.addCase(filteredData.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload;
-      state.count = state.data.jdList.length;
+      state.filtered = action.payload;
     });
-    builder.addCase(fetchJobs.rejected, (state, action) => {
+    builder.addCase(filteredData.rejected, (state, action) => {
       state.isError = true;
     });
   },

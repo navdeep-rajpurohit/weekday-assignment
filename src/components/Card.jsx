@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 import { capitalize } from "@mui/material";
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 import Loader from "./Loader";
-import { postedDuration } from "../utils/user";
+import { postedDuration } from "../utils/constants";
 import { Link } from "react-router-dom";
 
 const Card = (props) => {

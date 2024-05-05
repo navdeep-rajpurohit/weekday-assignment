@@ -1,37 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 import Card from "./Card";
 import FilterModal from "./FilterModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchJobs, fetchMoreJobs } from "../redux/slice/jobsSlice";
+import {
+  fetchJobs,
+  fetchMoreJobs,
+  filteredData,
+} from "../redux/slice/jobsSlice";
 import Loader from "./Loader";
 
 const JobSection = () => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  const jobs = state.jobs.data.jdList;
+  const jobs = state.jobs.filtered.jdList || state.jobs.data.jdList;
+
   // For calling the api on scroll
   let limit = 10;
   // When the api is called after scrolling
-  const isLoading = state.moreJobs.isLoading;
-
-  useEffect(() => {
-    dispatch(fetchJobs());
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [dispatch]);
+  const isLoading = state.jobs.isLoading;
 
   // Logic to handle infinite scrolling
   const handleScroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       dispatch(fetchMoreJobs(limit));
       limit = limit + 10;
-      console.log(jobs);
     }
   };
 
+  useEffect(() => {
+    dispatch(fetchJobs());
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  console.log(state);
   return (
     <>
       <Box sx={{ padding: "20px" }}>
@@ -43,7 +49,7 @@ const JobSection = () => {
               </Typography>{" "}
             </Box>
             {/* Filtering Modal */}
-            <FilterModal />
+            <FilterModal/>
 
             <Grid
               container

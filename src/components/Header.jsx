@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
-import { username } from "../utils/user"
+import { username } from "../utils/constants"
 
 const Header = () => {
   return (

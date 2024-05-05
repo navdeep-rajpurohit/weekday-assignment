@@ -7,7 +7,7 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 // static text
-import { currentCtc, expectedCtc, noticePeriod } from "../utils/user";
+import { currentCtc, expectedCtc, noticePeriod } from "../utils/constants";
 
 const ProfileSidebar = () => {
   return (
