@@ -6,6 +6,8 @@ import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import EditIcon from "@mui/icons-material/Edit";
+// static text
+import { currentCtc, expectedCtc, noticePeriod } from "../utils/user";
 
 const ProfileSidebar = () => {
   return (
@@ -34,19 +36,19 @@ const ProfileSidebar = () => {
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
         <PaymentsOutlinedIcon />
-        <Typography>8 lpa</Typography>
+        <Typography>{currentCtc}</Typography>
       </Box>
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
         <MonetizationOnOutlinedIcon />
-        <Typography>15 lpa</Typography>
+        <Typography>{expectedCtc}</Typography>
       </Box>
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
         <AccessTimeOutlinedIcon />
-        <Typography>45 days</Typography>
+        <Typography>{noticePeriod}</Typography>
       </Box>
       <Box sx={{ margin: "0px 0px" }}></Box>
       <Box

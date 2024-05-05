@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
+import { username } from "../utils/user"
 
 const Header = () => {
   return (
@@ -19,7 +20,7 @@ const Header = () => {
       }}
     >
       <Typography sx={{ fontSize: "20px", fontFamily: "Lexend, sans-serif" }}>
-        👋 Navdeep
+        👋 {username}  {/* Using static text as the field is not returned by api  */}
       </Typography>
     </Box>
   );

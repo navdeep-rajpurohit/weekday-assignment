@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import API_URL from "../../utils/api";
 
 export const fetchJobs = createAsyncThunk("fetchJobs", async () => {
   const myHeaders = new Headers();
@@ -14,19 +15,18 @@ export const fetchJobs = createAsyncThunk("fetchJobs", async () => {
     body,
   };
 
-  const res = await fetch(
-    "https://api.weekday.technology/adhoc/getSampleJdJSON",
-    requestOptions
-  );
+  const res = await fetch(API_URL, requestOptions);
 
   return res?.json();
 });
 
+// For infinite scroll
 export const fetchMoreJobs = createAsyncThunk("fetchJobs", async (page) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const body = JSON.stringify({
+    // increasing the limit by 10 for every scroll
     limit: 10 + page,
     offset: 0,
   });
@@ -36,10 +36,7 @@ export const fetchMoreJobs = createAsyncThunk("fetchJobs", async (page) => {
     body,
   };
 
-  const res = await fetch(
-    "https://api.weekday.technology/adhoc/getSampleJdJSON",
-    requestOptions
-  );
+  const res = await fetch(API_URL, requestOptions);
 
   return res?.json();
 });
@@ -87,4 +84,3 @@ export const jobsSlice = createSlice({
     });
   },
 });
-
