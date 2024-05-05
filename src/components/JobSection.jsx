@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
@@ -27,8 +27,10 @@ const JobSection = () => {
   };
 
   useEffect(() => {
+    // Initial api call
     dispatch(fetchJobs());
 
+    // to handle infinite scroll event
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);

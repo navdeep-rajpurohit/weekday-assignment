@@ -1,5 +1,5 @@
-import React from "react";
 import Button from "@mui/material/Button";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import CardContent from "@mui/material/CardContent";
@@ -10,10 +10,45 @@ import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 import Loader from "./Loader";
 import { postedDuration } from "../utils/constants";
 import { Link } from "react-router-dom";
+import Modal from "@mui/material/Modal";
 
 const Card = (props) => {
+  // modal variables
+  const [open, setOpen] = useState(false);
+  const [jobDesc, setJobDesc] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  // modal style
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
     <>
+      {/* Modal to be displayed on button click */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Job description
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {jobDesc}
+          </Typography>
+        </Box>
+      </Modal>
       {props.job != null ? (
         props.job.map((jobs) => (
           <Grid
@@ -84,7 +119,7 @@ const Card = (props) => {
                   </Box>
                 </Box>
               </Box>
-              <CardContent>
+              <CardContent sx={{ paddingTop: "0px" }}>
                 <Box sx={{ display: "flex", gap: "0.5rem" }}>
                   <Box
                     component="img"
@@ -114,14 +149,16 @@ const Card = (props) => {
                         {capitalize(jobs.jobRole)}
                       </Typography>
                     </Box>
-                    <Typography>{capitalize(jobs.location)}</Typography>
+                    <Typography fontSize="small">
+                      {capitalize(jobs.location)}
+                    </Typography>
                   </Box>
                 </Box>
-                <Typography paragraph={true}>
-                  Estimated Salary:{" "}
-                  {jobs.salaryCurrencyCode == "USD" ? "$" : "₹"}
-                  {jobs.minJdSalary} - {jobs.maxJdSalary}{" "}
-                  {jobs.salaryCurrencyCode == "USD" ? "K" : "LPA"}
+                <Typography paragraph={true} fontWeight={"200"}>
+                  Estimated Salary: {jobs.maxJdSalary ? "" : "From "}
+                  {jobs.minJdSalary ? "$" + jobs.minJdSalary : "Upto"}{" "}
+                  {jobs.maxJdSalary && jobs.minJdSalary ? " - " : ""}
+                  {jobs.maxJdSalary ? jobs.maxJdSalary + " K" : ""}
                 </Typography>
                 <Box>
                   <Box sx={{ height: "250px", overflow: "hidden" }}>
@@ -129,37 +166,62 @@ const Card = (props) => {
                     <Typography sx={{ fontSize: "1rem", lineHeight: "1.5" }}>
                       About Company:
                     </Typography>
-                    <Box sx={{ fontSize: "14px" }}>
+                    <Box
+                      sx={{
+                        fontSize: "14px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-around",
+                      }}
+                    >
                       <Typography sx={{ fontWeight: "bold" }}>
                         About us
                       </Typography>
                       <Typography
                         paragraph={true}
                         sx={{ overflow: "auto", height: "160px" }}
+                        fontWeight={"200"}
                       >
                         {jobs.jobDetailsFromCompany}
                       </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          height: "10px",
+                        }}
+                      >
+                        <Button
+                          onClick={() => {
+                            handleOpen();
+                            setJobDesc(jobs.jobDetailsFromCompany);
+                          }}
+                        >
+                          Show more
+                        </Button>
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
                 <Box>
-                  <Typography
-                    sx={{
-                      fontSize: "13px",
-                      letterSpacing: "1px",
-                      marginBottom: "3px",
-                    }}
-                  >
-                    Minimum Experience
-                  </Typography>
                   {jobs.minExp == null ? (
-                    <Typography sx={{ fontSize: "14px", lineHeight: "1.5" }}>
-                      No minimum experience required
-                    </Typography>
+                    <Typography sx={{ height: "45px" }}></Typography>
                   ) : (
-                    <Typography sx={{ fontSize: "14px", lineHeight: "1.5" }}>
-                      {jobs.minExp} years
-                    </Typography>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          letterSpacing: "1px",
+                          marginBottom: "3px",
+                        }}
+                      >
+                        Minimum Experience
+                      </Typography>
+
+                      <Typography sx={{ fontSize: "14px", lineHeight: "1.5" }}>
+                        {jobs.minExp} years
+                      </Typography>
+                    </>
                   )}
                 </Box>
               </CardContent>{" "}
