@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Select from "react-select";
@@ -27,16 +26,79 @@ const FilterModal = () => {
       };
     }
     const minExp = e.value;
-    const filteredList = toFilter.filter((x) => x.minExp < minExp);
+    const filteredList = toFilter.filter((job) => job.minExp < minExp);
     dispatch(filteredData(filteredList));
   };
 
   // Company name Filter function
   const filterCompanyName = (e) => {
     const name = e.target.value;
-    const filteredList = toFilter.filter((x) =>
-      x.companyName.toUpperCase().includes(name.toUpperCase())
+    const filteredList = toFilter.filter((job) =>
+      job.companyName.toUpperCase().includes(name.toUpperCase())
     );
+    dispatch(filteredData(filteredList));
+  };
+
+  // Location Filter function
+  const filterLocation = (e) => {
+    if (!e) {
+      e = {
+        value: "",
+      };
+    }
+    const location = e.value;
+    let filteredList = toFilter.filter(
+      (job) => job.location.toUpperCase() == location.toUpperCase()
+    );
+    filteredList = filteredList == 0 ? toFilter : filteredList;
+    dispatch(filteredData(filteredList));
+  };
+
+  // Remote/Onsite Filter function
+  const filterRemoteOnsite = (e) => {
+    if (!e) {
+      e = {
+        value: "",
+      };
+    }
+    const remoteOnsite = e.value;
+    let filteredList = [];
+    if (remoteOnsite === "remote") {
+      filteredList = toFilter.filter((job) => job.location === "remote");
+    } else if (remoteOnsite === "onsite") {
+      filteredList = toFilter.filter((job) => job.location !== "remote");
+    } else {
+      return toFilter;
+    }
+
+    dispatch(filteredData(filteredList));
+  };
+
+  // Stack/Role Filter function
+  const filterRole = (e) => {
+    if (!e) {
+      e = {
+        value: "",
+      };
+    }
+    const role = e.value;
+    let filteredList = toFilter.filter(
+      (job) => job.jobRole.toUpperCase() == role.toUpperCase()
+    );
+    filteredList = filteredList == 0 ? toFilter : filteredList;
+    dispatch(filteredData(filteredList));
+  };
+
+  // Minimum oay Filter function
+  const filterPay = (e) => {
+    if (!e) {
+      e = {
+        value: "",
+      };
+    }
+    const pay = e.value;
+    let filteredList = toFilter.filter((job) => job.minJdSalary > pay);
+    filteredList = filteredList == 0 ? toFilter : filteredList;
     dispatch(filteredData(filteredList));
   };
 
@@ -102,21 +164,42 @@ const FilterModal = () => {
           name="name"
         />
       </Box>
+      {/* Location */}
       <Box>
         {" "}
-        <Select placeholder="Location" options={locationOptions} isClearable />
+        <Select
+          placeholder="Location"
+          options={locationOptions}
+          isClearable
+          onChange={filterLocation}
+        />
       </Box>
       <Box>
         {" "}
-        <Select placeholder="Remote" options={remoteOnsiteOptions} />
+        <Select
+          placeholder="Remote"
+          options={remoteOnsiteOptions}
+          onChange={filterRemoteOnsite}
+          isClearable
+        />
       </Box>
       <Box>
         {" "}
-        <Select placeholder="Tech Stack" options={techStackOptions} />
+        <Select
+          placeholder="Tech Stack"
+          options={techStackOptions}
+          onChange={filterRole}
+          isClearable
+        />
       </Box>
       <Box>
         {" "}
-        <Select placeholder="Roles" isMulti options={techStackOptions} />
+        <Select
+          placeholder="Roles"
+          options={techStackOptions}
+          onChange={filterRole}
+          isClearable
+        />
       </Box>
       <Box>
         {" "}
@@ -124,6 +207,7 @@ const FilterModal = () => {
           placeholder="Minimum Base Pay Salary"
           options={payOptions}
           isClearable
+          onChange={filterPay}
         />
       </Box>
     </Box>
