@@ -179,8 +179,13 @@ const Card = (props) => {
                       </Typography>
                       <Typography
                         paragraph={true}
-                        sx={{ overflow: "auto", height: "160px" }}
-                        fontWeight={"200"}
+                        sx={{
+                          whiteSpace: "wrap",
+                          textOverflow: "ellipsis",
+                          overflow: "",
+                          height: "160px",
+                        }}
+                        fontWeight={"150"}
                       >
                         {jobs.jobDetailsFromCompany}
                       </Typography>
@@ -188,10 +193,13 @@ const Card = (props) => {
                         sx={{
                           display: "flex",
                           justifyContent: "center",
-                          height: "10px",
+                          height: "30px",
+                          zIndex: 0,
+                          backgroundColor: "#FFFFFF",
                         }}
                       >
                         <Button
+                          sx={{ zIndex: "0" }}
                           onClick={() => {
                             handleOpen();
                             setJobDesc(jobs.jobDetailsFromCompany);
