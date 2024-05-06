@@ -22,7 +22,7 @@ cd weekday-assignment
 ```
 Install dependencies
 ```sh
-run npm install
+npm install
 ```
 Here you go
 ```sh
